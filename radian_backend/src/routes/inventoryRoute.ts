@@ -64,7 +64,6 @@ inventoryRouter.post("/", async (req, res) => {
             description,
             category,
             icon,
-            amount
         });
 
         // Save the new inventory item to the database

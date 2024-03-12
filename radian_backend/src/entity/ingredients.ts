@@ -18,6 +18,6 @@ export class Ingredients {
     description!: string
 
     @Column()
-    amount!: number
+    stock!: number
 }
 

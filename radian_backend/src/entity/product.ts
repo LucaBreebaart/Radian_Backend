@@ -17,10 +17,9 @@ export class Products {
     @Column()
     description!: string
 
-    @Column()
-    amount!: number
-
-    @Column()
-    location!: string
+    //Recipe ID -> connects to Recipe ->  
+    // which holds 5 ingredients -> 
+    // which links to ingredient 
+    
 }
 

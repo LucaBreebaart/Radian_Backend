@@ -14,24 +14,11 @@ export class Users{
     surname!: string 
 
     @Column()
-    username!: string
+    email!: string
 
     @Column()
     password!: string
 
     @Column()
-    email!: string
-
-    @Column()
-    dateofbirth!: string
-
-    @Column()
-    gender!: string
-
-    @Column()
-    img!: string
-
-    @Column()
     phone_no!: number
-
 }
