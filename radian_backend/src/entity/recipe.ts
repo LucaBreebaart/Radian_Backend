@@ -5,13 +5,8 @@ export class Recipe {
     @PrimaryGeneratedColumn()
     id!: number
 
-    @Column()
-    name!: string
+    // link to ingredient primary key
+    // this will hold the 5 ingredients
 
-    @Column()
-    description!: string
-
-    @Column()
-    amountCrafted!: number
 }
 
