@@ -1,6 +1,6 @@
 import Express from "express";
 import AppDataSource from "../dataSource";
-import { Inventory } from "../entity/inventory";
+import { Products } from "../entity/product";
 
 const inventoryRouter = Express.Router()
 
@@ -12,7 +12,7 @@ inventoryRouter.get("/", async (req, res) => {
     try {
         // console.log("called")
         const inventory = await appDataSource
-            .getRepository(Inventory)
+            .getRepository(Products)
             .find()
 
         res.json(inventory)
@@ -30,7 +30,7 @@ inventoryRouter.put("/:id", async (req, res) => {
 
         const { name, description, category, icon, amount } = req.body
 
-        const inventoryItem = await appDataSource.getRepository(Inventory)
+        const inventoryItem = await appDataSource.getRepository(Products)
             .findOneBy({ id: id })
 
         if (!inventoryItem) {
@@ -40,7 +40,7 @@ inventoryRouter.put("/:id", async (req, res) => {
 
             inventoryItem!.amount = amount
 
-            const updatedItem = await appDataSource.getRepository(Inventory)
+            const updatedItem = await appDataSource.getRepository(Products)
                 .save(inventoryItem!)
             res.json(updatedItem)
 
@@ -59,7 +59,7 @@ inventoryRouter.post("/", async (req, res) => {
         const { name, description, category, icon, amount } = req.body;
 
         // Create a new instance of the Inventory entity with the provided data
-        const newInventoryItem = appDataSource.getRepository(Inventory).create({
+        const newInventoryItem = appDataSource.getRepository(Products).create({
             name,
             description,
             category,
@@ -68,7 +68,7 @@ inventoryRouter.post("/", async (req, res) => {
         });
 
         // Save the new inventory item to the database
-        const savedItem = await appDataSource.getRepository(Inventory).save(newInventoryItem);
+        const savedItem = await appDataSource.getRepository(Products).save(newInventoryItem);
 
         res.status(201).json(savedItem); // 201 status code for successful creation
     } catch (error) {
