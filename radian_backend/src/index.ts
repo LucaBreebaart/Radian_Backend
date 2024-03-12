@@ -1,9 +1,12 @@
 import express from 'express';
-import dotenv from 'dotenv';
+import dotenv from 'dotenv/config';
 import { DataSource } from 'typeorm';
 import AppDataSource from './dataSource';
 import inventoryRouter from './routes/inventoryRoute';
 // import ormconfig from '../ormconfig.json';
+
+require('dotenv').config()
+// console.log(process.env)
 
 const cors = require('cors');
 
@@ -11,7 +14,6 @@ const app = express();
 
 app.use(cors())
 
-dotenv.config()
 
 const appDataSource = AppDataSource
 
