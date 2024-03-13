@@ -1,5 +1,5 @@
 import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Ingredients } from "./ingredients";
+import { Ingredient } from "./ingredients";
 
 @Entity()
 export class Recipe {
@@ -9,9 +9,12 @@ export class Recipe {
     @Column()
     title!: string
 
-    @ManyToMany(() => Ingredients, ingredient => ingredient.recipes)
+    @ManyToMany(() => Ingredient, ingredient => ingredient.recipes)
     @JoinTable()
-    ingredients!: Ingredients[]
+    ingredients!: Ingredient[]
+    
+    
+    
     // link to ingredient primary key
     // this will hold the 5 ingredients
 

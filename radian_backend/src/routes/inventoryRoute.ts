@@ -1,6 +1,6 @@
 import Express from "express";
 import AppDataSource from "../dataSource";
-import { Ingredients } from "../entity/ingredients";
+import { Ingredient } from "../entity/ingredients";
 
 const inventoryRouter = Express.Router()
 
@@ -12,7 +12,7 @@ inventoryRouter.get("/", async (req, res) => {
     try {
         // console.log("called")
         const inventory = await appDataSource
-            .getRepository(Ingredients)
+            .getRepository(Ingredient)
             .find()
 
         res.json(inventory)
@@ -30,7 +30,7 @@ inventoryRouter.put("/:id", async (req, res) => {
 
         const { name, description, category, icon, amount } = req.body
 
-        const inventoryItem = await appDataSource.getRepository(Ingredients)
+        const inventoryItem = await appDataSource.getRepository(Ingredient)
             .findOneBy({ id: id })
 
         if (!inventoryItem) {
@@ -40,7 +40,7 @@ inventoryRouter.put("/:id", async (req, res) => {
 
             inventoryItem!.stock = amount
 
-            const updatedItem = await appDataSource.getRepository(Ingredients)
+            const updatedItem = await appDataSource.getRepository(Ingredient)
                 .save(inventoryItem!)
             res.json(updatedItem)
 
@@ -59,7 +59,7 @@ inventoryRouter.post("/", async (req, res) => {
         const { name, description, category, icon, amount } = req.body;
 
         // Create a new instance of the Inventory entity with the provided data
-        const newInventoryItem = appDataSource.getRepository(Ingredients).create({
+        const newInventoryItem = appDataSource.getRepository(Ingredient).create({
             name,
             description,
             category,
@@ -67,7 +67,7 @@ inventoryRouter.post("/", async (req, res) => {
         });
 
         // Save the new inventory item to the database
-        const savedItem = await appDataSource.getRepository(Ingredients).save(newInventoryItem);
+        const savedItem = await appDataSource.getRepository(Ingredient).save(newInventoryItem);
 
         res.status(201).json(savedItem); // 201 status code for successful creation
     } catch (error) {
