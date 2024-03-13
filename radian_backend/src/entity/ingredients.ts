@@ -1,8 +1,9 @@
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Recipe } from "./recipe";
+import { Warehouse } from "./warehouses";
 
 @Entity()
-export class Ingredients {
+export class Ingredient {
     @PrimaryGeneratedColumn()
     id!: number
 
@@ -22,6 +23,10 @@ export class Ingredients {
     stock!: number
 
     @ManyToMany(() => Recipe, recipe => recipe.ingredients)
-    recipes!: Recipe[]    
+    recipes!: Recipe[]
+
+    @ManyToMany(() => Warehouse, warehouse => warehouse.ingredients)
+    @JoinTable()
+    warehouses!: Warehouse[]
 }
 
