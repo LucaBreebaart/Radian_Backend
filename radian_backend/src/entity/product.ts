@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Recipe } from "./recipe";
+
 
 @Entity()
 export class Products {
@@ -9,6 +11,12 @@ export class Products {
     name!: string
 
     @Column()
+    sku!: string
+
+    @Column()
+    price!: number
+
+    @Column()
     category!: string
 
     @Column()
@@ -16,6 +24,13 @@ export class Products {
 
     @Column()
     description!: string
+
+    @OneToOne(() => Recipe)
+    @JoinColumn()
+    recipe_id!: Recipe
+
+    // https://typeorm.io/relations <-- Lets have a look at this so that we can do relations
+
 
     //Recipe ID -> connects to Recipe ->  
     // which holds 5 ingredients -> 
