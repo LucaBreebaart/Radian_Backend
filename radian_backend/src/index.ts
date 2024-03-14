@@ -3,6 +3,7 @@ import dotenv from 'dotenv/config';
 import { DataSource } from 'typeorm';
 import AppDataSource from './dataSource';
 import inventoryRouter from './routes/inventoryRoute';
+import { Ingredient } from './entity/ingredients';
 // import ormconfig from '../ormconfig.json';
 
 require('dotenv').config()
@@ -18,19 +19,19 @@ app.use(cors())
 const appDataSource = AppDataSource
 
 
-app.get('/', (req, res) => {
-    res.send('Hello, world!');
-});
-
-
-// app.get('/users', async (req, res) => {
-//     const users = await appDataSource
-//     .manager.find(Lecturer)
-
-
-//     // console. log ( users )
-//     res.send(users)
+// app.get('/', (req, res) => {
+//     res.send('Hello, world!');
 // });
+
+
+app.get('/ingredients', async (req, res) => {
+    const ingredients = await appDataSource
+    .manager.find(Ingredient)
+
+
+    // console. log ( users )
+    res.send(ingredients)
+});
 
 
 // app.get('/users/:id', async (req, res) => {
