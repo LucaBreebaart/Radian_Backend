@@ -4,6 +4,7 @@ import { DataSource } from 'typeorm';
 import AppDataSource from './dataSource';
 import inventoryRouter from './routes/inventoryRoute';
 import { Ingredient } from './entity/ingredients';
+import recipeRouter from './routes/recipeRoute';
 // import ormconfig from '../ormconfig.json';
 
 require('dotenv').config()
@@ -17,11 +18,6 @@ app.use(cors())
 
 
 const appDataSource = AppDataSource
-
-
-// app.get('/', (req, res) => {
-//     res.send('Hello, world!');
-// });
 
 
 app.get('/ingredients', async (req, res) => {
@@ -45,6 +41,8 @@ app.get('/ingredients', async (req, res) => {
 // })
 
 app.use('/inventory', inventoryRouter);
+
+app.use('/recipes', recipeRouter);
 
 app.listen(process.env.PORT, () => {
     console.log('Server is listening on port 3000');
