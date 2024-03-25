@@ -1,5 +1,5 @@
-import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Ingredient } from "./ingredients";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Product } from "./products";
 
 @Entity()
 export class Recipe {
@@ -7,16 +7,16 @@ export class Recipe {
     id!: number
 
     @Column()
-    title!: string
+    name!: string
 
-    @ManyToMany(() => Ingredient, ingredient => ingredient.recipes)
-    @JoinTable()
-    ingredients!: Ingredient[]
-    
-    
-    
-    // link to ingredient primary key
-    // this will hold the 5 ingredients
+    @Column()
+    description!: string
 
+    @Column()
+    amountCrafted!: number
+
+    //recipe can have an array of ingredients from ingredient entity
+    @OneToMany(() => Product, products => products.recipe)
+    products?: Product[]
 }
 

@@ -1,6 +1,6 @@
-import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Recipe } from "./recipe";
-import { Warehouse } from "./warehouses";
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+// import { Warehouse } from "./warehouses";
+import { Product } from "./products";
 
 @Entity()
 export class Ingredient {
@@ -22,11 +22,11 @@ export class Ingredient {
     @Column()
     stock!: number
 
-    @ManyToMany(() => Recipe, recipe => recipe.ingredients)
-    recipes!: Recipe[]
+    @OneToMany(() => Product, products => products.ingredients)
+    public ingredientsToCraftables?: Product[];
 
-    @ManyToMany(() => Warehouse, warehouse => warehouse.ingredients)
-    @JoinTable()
-    warehouses!: Warehouse[]
+    // @ManyToMany(() => Warehouse, warehouse => warehouse.ingredients)
+    // @JoinTable()
+    // warehouses!: Warehouse[]
 }
 
