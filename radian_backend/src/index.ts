@@ -6,7 +6,7 @@ import inventoryRouter from './routes/ingredientsRoute';
 import { Ingredient } from './entity/ingredients';
 
 import ingredientsRouter from './routes/ingredientsRoute';
-
+import usereRouter from './routes/userRoute';
 
 require('dotenv').config()
 
@@ -26,6 +26,9 @@ app.get('/ingredients', async (req, res) => {
 });
 
 app.use('/ingrediemts', ingredientsRouter);
+
+app.use('/users', usereRouter);
+
 
 app.listen(process.env.PORT, () => {
     console.log('Server is listening on port 3000');
