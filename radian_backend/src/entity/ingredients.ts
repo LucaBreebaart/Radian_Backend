@@ -11,6 +11,9 @@ export class Ingredient {
     name!: string
 
     @Column()
+    sku!: string
+
+    @Column()
     category!: string
 
     @Column()

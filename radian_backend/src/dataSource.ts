@@ -6,7 +6,7 @@ const AppDataSource = new DataSource(
         "host": "localhost",
         "port": 5432,
         "username": "postgres",
-        "password": "123456",
+        "password": "1234",
         "database": "radian_db",
         "entities": ["src/entity/*.ts"],
         "logging": true,

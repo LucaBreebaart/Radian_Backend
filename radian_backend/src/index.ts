@@ -25,7 +25,7 @@ app.get('/ingredients', async (req, res) => {
     res.send(ingredients)
 });
 
-app.use('/ingrediemts', ingredientsRouter);
+app.use('/ingredients', ingredientsRouter);
 
 app.use('/users', usereRouter);
 

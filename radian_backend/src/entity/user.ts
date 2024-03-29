@@ -31,6 +31,6 @@ export class User { //user is reserved postgres
     }
 
     //npm install bcrypt
-    //npm install --save @types/bcrypt
+    //npm install --save-dev @types/bcrypt
 
 }
