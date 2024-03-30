@@ -7,6 +7,7 @@ import { Ingredient } from './entity/ingredients';
 
 import ingredientsRouter from './routes/ingredientsRoute';
 import usereRouter from './routes/userRoute';
+import recipeRouter from './routes/recipeRoute';
 
 require('dotenv').config()
 
@@ -26,6 +27,8 @@ app.get('/ingredients', async (req, res) => {
 });
 
 app.use('/ingredients', ingredientsRouter);
+
+app.use('/recipes', recipeRouter)
 
 app.use('/users', usereRouter);
 
