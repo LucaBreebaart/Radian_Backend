@@ -10,6 +10,12 @@ export class Recipe {
     name!: string
 
     @Column()
+    img!: string
+
+    @Column()
+    price!: number
+
+    @Column()
     description!: string
 
     @Column()
