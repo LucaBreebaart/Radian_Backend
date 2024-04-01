@@ -28,7 +28,7 @@ ingredientsRouter.put("/:id", async (req, res) => {
 
         const id = parseInt(req.params.id)
 
-        const { name, description, category, icon, amount } = req.body
+        const { name, description, category, icon, stock } = req.body
 
         const ingredientsItem = await appDataSource.getRepository(Ingredient)
             .findOneBy({ id: id })
@@ -38,7 +38,7 @@ ingredientsRouter.put("/:id", async (req, res) => {
         }
         else {
 
-            ingredientsItem!.stock = amount
+            ingredientsItem!.stock = stock
 
             const updatedItem = await appDataSource.getRepository(Ingredient)
                 .save(ingredientsItem!)
@@ -56,14 +56,16 @@ ingredientsRouter.put("/:id", async (req, res) => {
 
 ingredientsRouter.post("/", async (req, res) => {
     try {
-        const { name, description, category, icon, amount } = req.body;
+        const { name, category, icon, description, stock, sku } = req.body;
 
         // Create a new instance of the ingredients entity with the provided data
         const newingredientsItem = appDataSource.getRepository(Ingredient).create({
             name,
-            description,
             category,
             icon,
+            description,
+            stock,
+            sku // Include sku field in the creation
         });
 
         // Save the new ingredients item to the database
