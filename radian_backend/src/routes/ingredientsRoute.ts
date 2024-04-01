@@ -78,4 +78,24 @@ ingredientsRouter.post("/", async (req, res) => {
     }
 });
 
+ingredientsRouter.get("/:id", async (req, res) => {
+    try {
+        const id: number = parseInt(req.params.id, 10);
+
+        const ingredient = await appDataSource
+            .getRepository(Ingredient)
+            .findOne({ where: { id } });
+
+        if (!ingredient) {
+            return res.status(404).json({ message: "Ingredient not found" });
+        }
+
+        res.json(ingredient);
+    } catch (error) {
+        console.error("Error fetching ingredient by ID", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+
+
 export default ingredientsRouter
