@@ -3,6 +3,7 @@ import AppDataSource from "../dataSource";
 import { Recipe } from "../entity/recipe";
 import { Ingredient } from "../entity/ingredients";
 import { Product } from "../entity/products";
+import { serializeWithBufferAndIndex } from "typeorm/driver/mongodb/bson.typings";
 
 
 const recipeRouter = express.Router()
@@ -48,6 +49,35 @@ recipeRouter.get("/:id", async (req, res) => {
         return res.status(500).json({message: error})
     }
 });
+
+recipeRouter.put("/:id", async (req, res) => {
+    try {
+        const id = parseInt(req.params.id)
+        const { name, img, price, description, amountCrafted } = req.body
+
+        var updateRecipeData = await appDataSource.getRepository(Recipe).findOneBy({ id: id })
+
+        if (!updateRecipeData) {
+            return res.status(500).json({message: "No Product Found"})
+        }else {
+
+            updateRecipeData.name = name
+            updateRecipeData.img = img
+            updateRecipeData.price = price
+            updateRecipeData.description = description
+            updateRecipeData.amountCrafted = amountCrafted
+
+            var newRecipeData = await appDataSource.getRepository(Recipe).save(updateRecipeData)
+            return res.json(newRecipeData)
+
+        }
+
+    } catch (error) {
+        console.log("Something went wrong while updating")
+        return res.status(500).json({message: error})
+    }
+});
+
 
 recipeRouter.put("/:id/craft", async (req, res) => {
     try {
