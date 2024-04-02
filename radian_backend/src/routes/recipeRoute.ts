@@ -23,7 +23,28 @@ recipeRouter.get("/", async (req, res) => {
         res.json(recipes)
 
     } catch (error){
-        console.log("an error has occured in recipeRoute")
+        console.log("an error has occured in recipeRoute while getting recipes")
+        return res.status(500).json({message: error})
+    }
+});
+
+recipeRouter.get("/:id", async (req, res) => {
+    try {
+        const id: number = parseInt(req.params.id, 10)
+
+        const recipe = await appDataSource
+        .getRepository(Recipe)
+        .findOne({ where: {id}});
+
+        if (!recipe) {
+            return res.status(404).json({ message: "Recipe not found" });
+        }
+
+        res.json(recipe);
+
+    } catch (error) {
+        
+        console.log("An error has occured in recipeRoute while trying to get the specific Recipe", error)
         return res.status(500).json({message: error})
     }
 });
