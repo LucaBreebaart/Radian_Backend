@@ -17,7 +17,8 @@ recipeRouter.get("/", async (req, res) => {
     try{
 
         const recipes = await appDataSource
-                            .getRepository(Recipe).createQueryBuilder("recipes")
+                            .getRepository(Recipe)
+                            .createQueryBuilder("recipes")
                             .leftJoinAndSelect("recipes.products", "product")
                             .leftJoinAndSelect("product.ingredients", "ingredient")
                             .getMany()
@@ -35,7 +36,7 @@ recipeRouter.get("/:id", async (req, res) => {
 
         const recipe = await appDataSource
         .getRepository(Recipe)
-        .findOne({ where: {id}});
+        .findOne({ where: {id}, relations: ["products"]});
 
         if (!recipe) {
             return res.status(404).json({ message: "Recipe not found" });
@@ -47,6 +48,31 @@ recipeRouter.get("/:id", async (req, res) => {
         
         console.log("An error has occured in recipeRoute while trying to get the specific Recipe", error)
         return res.status(500).json({message: error})
+    }
+});
+
+recipeRouter.get("/:id/products", async (req, res) => {
+    try {
+        const id = parseInt(req.params.id)
+
+        const recipe = await appDataSource
+            .getRepository(Recipe)
+            .findOneOrFail({
+                where: {id},
+                relations: ["products"] 
+            })
+
+        if (!recipe || !recipe.products) {
+            return res.status(404).json({ message: "Recipe products not found" })
+
+        }
+
+        const ingredients = recipe.products.map(product => product.ingredients);
+
+        res.json(ingredients);
+    } catch (error) {
+        console.log("An error occurred while fetching ingredients by recipe ID", error);
+        return res.status(500).json({ message: "Internal server error" });
     }
 });
 
