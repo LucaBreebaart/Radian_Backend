@@ -25,33 +25,35 @@ ingredientsRouter.get("/", async (req, res) => {
 
 ingredientsRouter.put("/:id", async (req, res) => {
     try {
+        const id = parseInt(req.params.id);
 
-        const id = parseInt(req.params.id)
+        const { name, description, category, icon, stock } = req.body;
 
-        const { name, description, category, icon, stock } = req.body
+        // Find the ingredient by ID
+        const ingredient = await appDataSource.getRepository(Ingredient).findOne({ where: { id: id } });
 
-        const ingredientsItem = await appDataSource.getRepository(Ingredient)
-            .findOneBy({ id: id })
-
-        if (!ingredientsItem) {
-            res.status(404).json({ message: "No item found" })
-        }
-        else {
-
-            ingredientsItem!.stock = stock
-
-            const updatedItem = await appDataSource.getRepository(Ingredient)
-                .save(ingredientsItem!)
-            res.json(updatedItem)
-
+        if (!ingredient) {
+            return res.status(404).json({ message: "No item found" });
         }
 
-    }
-    catch (error) {
-        console.error("Error updating ingredients  items", error);
+        // Update all properties of the ingredient
+        ingredient.name = name;
+        ingredient.description = description;
+        ingredient.category = category;
+        ingredient.icon = icon;
+        ingredient.stock = stock;
+
+        // Save the updated ingredient
+        const updatedItem = await appDataSource.getRepository(Ingredient).save(ingredient);
+        
+        // Return the updated ingredient in the response
+        res.json(updatedItem);
+    } catch (error) {
+        console.error("Error updating ingredient", error);
         res.status(500).json({ error: "Internal Server Error" });
     }
-})
+});
+
 
 
 ingredientsRouter.post("/", async (req, res) => {

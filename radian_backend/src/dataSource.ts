@@ -1,4 +1,9 @@
 import { DataSource } from "typeorm";
+import * as dotenv from "dotenv";
+
+dotenv.config(); // Load environment variables from .env file
+
+const password = process.env.DB_PASSWORD; // Retrieve password from environment variable
 
 const AppDataSource = new DataSource(
     {
@@ -6,7 +11,7 @@ const AppDataSource = new DataSource(
         "host": "localhost",
         "port": 5432,
         "username": "postgres",
-        "password": "1234",
+        "password": password,
         "database": "radian_db",
         "entities": ["src/entity/*.ts"],
         "logging": true,
