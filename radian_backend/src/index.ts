@@ -17,14 +17,14 @@ app.use(cors())
 
 const appDataSource = AppDataSource
 
-app.get('/ingredients', async (req, res) => {
-    const ingredients = await appDataSource
-        .manager.find(Ingredient)
+// app.get('/ingredients', async (req, res) => {
+//     const ingredients = await appDataSource
+//         .manager.find(Ingredient)
 
 
-    // console. log ( users )
-    res.send(ingredients)
-});
+//     // console. log ( users )
+//     res.send(ingredients)
+// });
 
 app.use('/ingredients', ingredientsRouter);
 

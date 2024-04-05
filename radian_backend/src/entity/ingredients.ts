@@ -1,5 +1,4 @@
-import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-// import { Warehouse } from "./warehouses";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Product } from "./products";
 
 @Entity()
@@ -22,14 +21,16 @@ export class Ingredient {
     @Column()
     description!: string
 
-    @Column()
-    stock!: number
+    @Column({ default: 0 }) 
+    durban!: number;
+
+    @Column({ default: 0 })
+    pretoria!: number;
+
+    @Column({ default: 0 })
+    capeTown!: number;
 
     @OneToMany(() => Product, products => products.ingredients)
     public ingredientsToCraftables?: Product[];
-
-    // @ManyToMany(() => Warehouse, warehouse => warehouse.ingredients)
-    // @JoinTable()
-    // warehouses!: Warehouse[]
 }
 
