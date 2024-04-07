@@ -99,29 +99,30 @@ ingredientsRouter.put("/byId/:id", async (req, res) => {
 ////////////////////////////////////////////////////////////////
 
 
-// ingredientsRouter.post("/", async (req, res) => {
-//     try {
-//         const { name, category, icon, description, stock, sku } = req.body;
+ingredientsRouter.post("/", async (req, res) => {
+    try {
+        const { name, category, icon, description, stock, sku, currentLocation } = req.body;
 
-//         // Create a new instance of the ingredients entity with the provided data
-//         const newingredientsItem = appDataSource.getRepository(Ingredient).create({
-//             name,
-//             category,
-//             icon,
-//             description,
-//             stock,
-//             sku // Include sku field in the creation
-//         });
+        // Create a new instance of the ingredients entity with the provided data
+        const newIngredientItem = appDataSource.getRepository(Ingredient).create({
+            name,
+            category,
+            icon,
+            description,
+            [currentLocation]: stock, // Set the stock for the current location
+            sku // Include sku field in the creation
+        });
 
-//         // Save the new ingredients item to the database
-//         const savedItem = await appDataSource.getRepository(Ingredient).save(newingredientsItem);
+        // Save the new ingredients item to the database
+        const savedItem = await appDataSource.getRepository(Ingredient).save(newIngredientItem);
 
-//         res.status(201).json(savedItem); // 201 status code for successful creation
-//     } catch (error) {
-//         console.error("Error creating ingredients item", error);
-//         res.status(500).json({ error: "Internal Server Error" });
-//     }
-// });
+        res.status(201).json(savedItem); // 201 status code for successful creation
+    } catch (error) {
+        console.error("Error creating ingredients item", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+
 
 
 
