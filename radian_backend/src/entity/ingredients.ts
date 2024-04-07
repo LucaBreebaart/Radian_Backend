@@ -9,8 +9,8 @@ export class Ingredient {
     @Column()
     name!: string
 
-    @Column()
-    sku!: string
+    @Column({default: 'sku01'})
+    sku?: string
 
     @Column()
     category!: string
@@ -21,7 +21,7 @@ export class Ingredient {
     @Column()
     description!: string
 
-    @Column()
+    @Column({default: 0})
     stock!: number
 
     @Column({ default: 0 }) 
