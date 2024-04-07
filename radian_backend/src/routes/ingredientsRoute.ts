@@ -2,7 +2,7 @@ import Express from "express";
 import AppDataSource from "../dataSource";
 import { Ingredient } from "../entity/ingredients";
 import { MoreThan } from "typeorm";
-
+import { Request, Response } from "express";
 
 const ingredientsRouter = Express.Router()
 
@@ -45,38 +45,58 @@ ingredientsRouter.get("/:location", async (req, res) => {
     }
 });
 
+ingredientsRouter.get("/byId/:id", async (req, res) => {
+    try {
+        const id: number = parseInt(req.params.id, 10);
 
-// ingredientsRouter.put("/:id", async (req, res) => {
-//     try {
-//         const id = parseInt(req.params.id);
+        const ingredient = await appDataSource
+            .getRepository(Ingredient)
+            .findOne({ where: { id } });
 
-//         const { name, description, category, icon, stock } = req.body;
+        if (!ingredient) {
+            return res.status(404).json({ message: "Ingredient not found" });
+        }
 
-//         // Find the ingredient by ID
-//         const ingredient = await appDataSource.getRepository(Ingredient).findOne({ where: { id: id } });
+        console.log("Selected Ingredient by ID:", ingredient); // Log the selected ingredient
 
-//         if (!ingredient) {
-//             return res.status(404).json({ message: "No item found" });
-//         }
+        res.json(ingredient);
+    } catch (error) {
+        console.error("Error fetching ingredient by ID", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
 
-//         // Update all properties of the ingredient
-//         ingredient.name = name;
-//         ingredient.description = description;
-//         ingredient.category = category;
-//         ingredient.icon = icon;
-//         ingredient.stock = stock;
 
-//         // Save the updated ingredient
-//         const updatedItem = await appDataSource.getRepository(Ingredient).save(ingredient);
-        
-//         // Return the updated ingredient in the response
-//         res.json(updatedItem);
-//     } catch (error) {
-//         console.error("Error updating ingredient", error);
-//         res.status(500).json({ error: "Internal Server Error" });
-//     }
-// });
+////////////////////////////////////////////////////////////////
 
+ingredientsRouter.put("/byId/:id", async (req, res) => {
+    try {
+        const id: number = parseInt(req.params.id, 10);
+        const ingredientToUpdate = await appDataSource
+            .getRepository(Ingredient)
+            .findOne({ where: { id } });
+
+        if (!ingredientToUpdate) {
+            return res.status(404).json({ message: "Ingredient not found" });
+        }
+
+        // Update the ingredient properties
+        Object.assign(ingredientToUpdate, req.body);
+
+        // Save the updated ingredient
+        const updatedIngredient = await appDataSource
+            .getRepository(Ingredient)
+            .save(ingredientToUpdate);
+
+        res.json(updatedIngredient);
+    } catch (error) {
+        console.error("Error updating ingredient:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+
+
+////////////////////////////////////////////////////////////////
 
 
 // ingredientsRouter.post("/", async (req, res) => {
@@ -103,23 +123,6 @@ ingredientsRouter.get("/:location", async (req, res) => {
 //     }
 // });
 
-// ingredientsRouter.get("/:id", async (req, res) => {
-//     try {
-//         const id: number = parseInt(req.params.id, 10);
 
-//         const ingredient = await appDataSource
-//             .getRepository(Ingredient)
-//             .findOne({ where: { id } });
-
-//         if (!ingredient) {
-//             return res.status(404).json({ message: "Ingredient not found" });
-//         }
-
-//         res.json(ingredient);
-//     } catch (error) {
-//         console.error("Error fetching ingredient by ID", error);
-//         res.status(500).json({ error: "Internal Server Error" });
-//     }
-// });
 
 export default ingredientsRouter
