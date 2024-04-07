@@ -105,51 +105,131 @@ recipeRouter.put("/:id", async (req, res) => {
 });
 
 
+recipeRouter.put("/:id/craft", async (req, res) => {
+    try {
+        let id = parseInt(req.params.id)
+        let { amount, products} = req.body
+
+        var recipeRequest = await appDataSource.getRepository(Recipe).findOneBy({id: id})
+
+        if(!recipeRequest) {
+            return res.status(500).json({message: "No Recipe Found  "})
+        } else {
+
+            recipeRequest!.amountCrafted = amount //updates (aleardy incremented in frontend)
+
+            // loop  through the ingredients and deduct the inventory amount
+            await updateIngredientAmount(products);
+
+            // save our recipe amount and return it
+            var newRecipeData = await appDataSource.getRepository(Recipe).save(recipeRequest);
+            return res.json(newRecipeData);
+        }
+    } catch (error) {
+        console.log(" Something went wrong")
+        return res.status(500).json({message: error})
+    }
+});
+
+
+
+const updateIngredientAmount = async (Products: Product[]) => {
+    try {
+
+        for (var product of Products){
+
+            var ingredientItem = await appDataSource.getRepository(Ingredient).findOneBy({id: product.inventoryId})
+
+            if(!ingredientItem) {
+                throw new Error(`Ingredient item with ID ${product.productId} not found`)
+            }
+
+            ingredientItem!.stock = product.ingredients!.stock - product.amount
+
+            await appDataSource.getRepository(Ingredient).save(ingredientItem!)
+        }
+    } catch (error) {
+        console.log("Something Went Wrong in updateInventoryAmount")
+        throw error
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////////
 // recipeRouter.put("/:id/craft", async (req, res) => {
 //     try {
-//         let id = parseInt(req.params.id)
-//         let { amount, products} = req.body
+//         const id = parseInt(req.params.id);
+//         const { amount, products } = req.body;
 
-//         var recipeRequest = await appDataSource.getRepository(Recipe).findOneBy({id: id})
-
-//         if(!recipeRequest) {
-//             return res.status(500).json({message: "No Recipe Found  ¯\_(ツ)_/¯ "})
-//         } else {
-
-//             recipeRequest!.amountCrafted = amount //updates (aleardy incremented in frontend)
-
-//             // loop  through the ingredients and deduct the inventory amount
-//             await updateIngredientAmount(products);
-
-//             // save our recipe amount and return it
-//             var newRecipeData = await appDataSource.getRepository(Recipe).save(recipeRequest);
-//             return res.json(newRecipeData);
+//         // Check if required fields are present
+//         if (!amount || !products || !Array.isArray(products)) {
+//             return res.status(400).json({ message: "Invalid request data" });
 //         }
+
+//         const recipeRequest = await appDataSource.getRepository(Recipe).findOne({ where: {id}});
+
+//         if (!recipeRequest) {
+//             return res.status(404).json({ message: "Recipe not found" });
+//         }
+
+//         recipeRequest.amountCrafted += amount; // Increment the amountCrafted
+
+//         // Update ingredient amounts
+//         // await updateIngredientAmount(products, currentLocationValue);
+
+//         // Save the updated recipe and return it
+//         const updatedRecipe = await appDataSource.getRepository(Recipe).save(recipeRequest);
+//         return res.json(updatedRecipe);
 //     } catch (error) {
-//         console.log(" Something went wrong")
-//         return res.status(500).json({message: error})
+//         console.log("Error while updating recipe and ingredients:", error);
+//         return res.status(500).json({ message: "Internal server error" });
 //     }
 // });
 
-// const updateIngredientAmount = async (Products: Product[]) => {
+// const updateIngredientAmount = async (products: Product[], currentLocation: keyof Ingredient) => {
 //     try {
+//         for (const product of products) {
+//             const ingredientItem = await appDataSource.getRepository(Ingredient).findOne({ where: { id: product.inventoryId } });
 
-//         for (var product of Products){
-
-//             var ingredientItem = await appDataSource.getRepository(Ingredient).findOneBy({id: product.inventoryId})
-
-//             if(!ingredientItem) {
-//                 throw new Error(`Ingredient item with ID ${product.productId} not found`)
+//             if (!ingredientItem) {
+//                 throw new Error(`Ingredient item with ID ${product.productId} not found`);
 //             }
 
-//             ingredientItem!.stock = product.ingredients!.stock - product.amount
+//             // Determine the current stock based on the current location
+//             let currentLocationStock = 0;
+//             switch (currentLocation) {
+//                 case 'durban':
+//                     currentLocationStock = ingredientItem.durban;
+//                     break;
+//                 case 'pretoria':
+//                     currentLocationStock = ingredientItem.pretoria;
+//                     break;
+//                 case 'capeTown':
+//                     currentLocationStock = ingredientItem.capeTown;
+//                     break;
+//                 default:
+//                     throw new Error('Invalid current location');
+//             }
 
-//             await appDataSource.getRepository(Ingredient).save(ingredientItem!)
+//             // Update the stock based on the current stock and the amount
+//             switch (currentLocation) {
+//                 case 'durban':
+//                     ingredientItem.durban = currentLocationStock - product.amount;
+//                     break;
+//                 case 'pretoria':
+//                     ingredientItem.pretoria = currentLocationStock - product.amount;
+//                     break;
+//                 case 'capeTown':
+//                     ingredientItem.capeTown = currentLocationStock - product.amount;
+//                     break;
+//                 default:
+//                     throw new Error('Invalid current location');
+//             }
+
+//             await appDataSource.getRepository(Ingredient).save(ingredientItem);
 //         }
 //     } catch (error) {
-//         console.log("Something Went Wrong in updateInventoryAmount")
-//         throw error
+//         console.log("Something Went Wrong in updateInventoryAmount", error);
+//         throw error;
 //     }
-// }
-
+// };
 export default recipeRouter

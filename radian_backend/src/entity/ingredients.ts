@@ -21,6 +21,9 @@ export class Ingredient {
     @Column()
     description!: string
 
+    @Column()
+    stock!: number
+
     @Column({ default: 0 }) 
     durban!: number;
 
